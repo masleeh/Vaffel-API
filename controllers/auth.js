@@ -22,7 +22,6 @@ const login = async (req, res) => {
             if (user.length === 0) {
                 return res.status(401).json('Not found user')
             }
-            console.log(user)
             const isPasswordCorrect = await comparePassword(password, user[0].password)
             if (!isPasswordCorrect) {
                 return res.status(401).json('Password is not correct')

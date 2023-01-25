@@ -12,7 +12,7 @@ const getAllDishes = async (req, res) => {
 const getSingleDish = async (req, res) => {
     try {
         const {params: {id: dishId}} = req
-        console.log(dishId);
+        console.log(`What`)
         const [singleDish] = await pool.query(`SELECT * FROM vaffel_schema.dishes WHERE id = ?`, [dishId])
         res.status(200).json(singleDish) 
     } catch (error) {
@@ -20,11 +20,20 @@ const getSingleDish = async (req, res) => {
     }
 }
 
+const getAllCategories = async (req, res) => {
+    try {
+        const [categories] = await pool.query(`SELECT vaffel_schema.categories.name from vaffel_schema.categories`)
+        res.status(200).json(categories)
+    } catch (error) {
+        res.status(403).json({msg: `Not found categories`})
+    }
+}
+
 const getCategory = async (req, res) => {
     try {
         const {params: {id: dishId}} = req
         const [categories] = await pool.query(`SELECT dc.dishes_id, c.* FROM vaffel_schema.dishes d left outer join vaffel_schema.dishes_categories dc on d.id = dc.dishes_id left outer join vaffel_schema.categories c on dc.category_id = c.id WHERE dishes_id = ?`, [dishId])
-        res.status(200).json(categories)
+        res.status(200).json(categories.map(item => item.name))
     } catch (error) {
         res.status(401).json(`Something went wrong`)
     }
@@ -85,7 +94,8 @@ module.exports = {
     createDish,
     updateDish,
     deleteCategory,
-    addCategory
+    addCategory,
+    getAllCategories
 }
 
 

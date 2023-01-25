@@ -14,10 +14,12 @@ const authMiddleware = require('./middleware/authentication')
 // Connecting routers
 const authRouter = require('./routes/auth')
 const dishesRouter = require('./routes/dishes')
+const categoryRouter = require('./routes/categories')
 
 // Using routes
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/dishes', authMiddleware, dishesRouter)
+app.use('/api/v1/categories', authMiddleware, categoryRouter)
 
 // Running server
 const port = 5000
