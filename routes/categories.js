@@ -6,10 +6,10 @@ const {
     getCategory,
     deleteCategory,
     addCategory,
-    getAllCategories
+    getAllCategories,
 } = require('../controllers/dishes')
 
-router.route('/').post(addCategory).delete(deleteCategory).get(getAllCategories)
+router.route('/').post(addCategory).patch(deleteCategory).get(getAllCategories)
 router.route('/:id').get(getCategory)
 
 module.exports = router

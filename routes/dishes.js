@@ -7,10 +7,11 @@ const {
     getSingleDish,
     createDish,
     updateDish,
+    deleteDish
 } = require('../controllers/dishes')
 
 router.route('/').get(getAllDishes).post(createDish)
-router.route('/:id').get(getSingleDish).patch(updateDish)
+router.route('/:id').get(getSingleDish).patch(updateDish).delete(deleteDish)
 
 
 

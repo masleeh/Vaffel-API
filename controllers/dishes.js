@@ -1,3 +1,4 @@
+const { response } = require('express')
 const pool = require('../db/connectDB')
 
 const getAllDishes = async (req, res) => {
@@ -22,7 +23,7 @@ const getSingleDish = async (req, res) => {
 
 const getAllCategories = async (req, res) => {
     try {
-        const [categories] = await pool.query(`SELECT vaffel_schema.categories.name from vaffel_schema.categories`)
+        const [categories] = await pool.query(`SELECT * from vaffel_schema.categories`)
         res.status(200).json(categories)
     } catch (error) {
         res.status(403).json({msg: `Not found categories`})
@@ -33,7 +34,13 @@ const getCategory = async (req, res) => {
     try {
         const {params: {id: dishId}} = req
         const [categories] = await pool.query(`SELECT dc.dishes_id, c.* FROM vaffel_schema.dishes d left outer join vaffel_schema.dishes_categories dc on d.id = dc.dishes_id left outer join vaffel_schema.categories c on dc.category_id = c.id WHERE dishes_id = ?`, [dishId])
-        res.status(200).json(categories.map(item => item.name))
+        res.status(200).json(categories.map(item => {
+            return {
+                name: item.name,
+                dishes_id: item.dishes_id,
+                category_id: item.id
+            }
+        }))
     } catch (error) {
         res.status(401).json(`Something went wrong`)
     }
@@ -87,6 +94,46 @@ const addCategory = async (req, res) => {
     }
 }
 
+const getDishesCategories = async (req, res) => {
+    try {
+        const [response] = await pool.query(`SELECT dc.dishes_id, c.* FROM vaffel_schema.dishes d left outer join vaffel_schema.dishes_categories dc on d.id=dc.dishes_id left outer join vaffel_schema.categories c on dc.category_id = c.id`)
+        res.status(200).json(response)
+    } catch (error) {
+        res.status(401).json(`Something went wrong`)
+    }
+}
+
+const deleteDish = async (req, res) => {
+    try {
+        const {id: dishId} = req.params
+        const [response] = await pool.query(`DELETE FROM vaffel_schema.dishes WHERE id = ?`, [dishId])
+        res.status(200).json(response)
+    } catch (error) {
+        res.status(401).json(`Something went wrong`)
+    }
+}
+
+const createCategory = async (req, res) => {
+    console.log('Go');
+    try {
+        const {name: categoryName} = req.body
+        const [response] = await pool.query(`INSERT INTO vaffel_schema.categories (name) VALUES (?)`, [categoryName])
+        res.status(200).json(response)
+    } catch (error) {
+        res.status(403).json(`Something went wrong`)
+    }
+}
+
+const setDeleteCategory = async (req, res) => {
+    try {
+        const {name: categoryName} = req.body
+        const [response] = await pool.query(`DELETE FROM vaffel_schema.categories WHERE name = ?`, [categoryName])
+        res.status(200).json(response)
+    } catch (error) {
+        res.status(403).json(`Something went wrong`)
+    }
+}
+
 module.exports = {
     getAllDishes,
     getSingleDish,
@@ -95,7 +142,11 @@ module.exports = {
     updateDish,
     deleteCategory,
     addCategory,
-    getAllCategories
+    getAllCategories,
+    getDishesCategories,
+    deleteDish,
+    createCategory,
+    setDeleteCategory
 }
 
 
