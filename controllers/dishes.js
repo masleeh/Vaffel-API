@@ -114,7 +114,6 @@ const deleteDish = async (req, res) => {
 }
 
 const createCategory = async (req, res) => {
-    console.log('Go');
     try {
         const {name: categoryName} = req.body
         const [response] = await pool.query(`INSERT INTO vaffel_schema.categories (name) VALUES (?)`, [categoryName])
@@ -126,8 +125,8 @@ const createCategory = async (req, res) => {
 
 const setDeleteCategory = async (req, res) => {
     try {
-        const {name: categoryName} = req.body
-        const [response] = await pool.query(`DELETE FROM vaffel_schema.categories WHERE name = ?`, [categoryName])
+        const {id: id} = req.params
+        const [response] = await pool.query(`DELETE FROM vaffel_schema.categories WHERE id = ?`, [id])
         res.status(200).json(response)
     } catch (error) {
         res.status(403).json(`Something went wrong`)
