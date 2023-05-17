@@ -24,7 +24,7 @@ const getSingleDish = async (req, res) => {
 const getAllCategories = async (req, res) => {
     try {
         const [categories] = await pool.query(`SELECT * from vaffel_schema.categories`)
-        res.status(200).json(categories)
+        res.status(200).json(categories.sort((a, b) => a.order - b.order))
     } catch (error) {
         res.status(403).json({msg: `Not found categories`})
     }

@@ -19,15 +19,17 @@ const categoryDishes = require('./routes/categorieswdishes')
 const manageCategories = require('./routes/setCategories')
 const managePromotions = require('./routes/promotions')
 const manageSeasons = require('./routes/seasons')
+const publicDishes = require('./routes/publicDishes')
 
 // Using routes
 app.use('/api/v1/auth', authRouter)
-app.use('/api/v1/dishes', authMiddleware, dishesRouter)
-app.use('/api/v1/categories', authMiddleware, categoryRouter)
-app.use('/api/v1/categorieswdishes', authMiddleware, categoryDishes)
-app.use('/api/v1/setcategories', authMiddleware, manageCategories)
-app.use('/api/v1/promotions', authMiddleware, managePromotions)
-app.use('/api/v1/seasons', authMiddleware, manageSeasons)
+app.use('/api/v1/dishes', dishesRouter)
+app.use('/api/v1/categories', categoryRouter)
+app.use('/api/v1/categorieswdishes', categoryDishes)
+app.use('/api/v1/setcategories', manageCategories)
+app.use('/api/v1/promotions', managePromotions)
+app.use('/api/v1/seasons', manageSeasons)
+app.use('/dishes', publicDishes)
 
 
 // Running server
